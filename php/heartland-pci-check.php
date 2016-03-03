@@ -8,7 +8,7 @@ function println($text, $cli)
 $cli = php_sapi_name() == 'cli';
 $php = phpversion();
 $tls = explode(' ', OPENSSL_VERSION_TEXT);
-$com = version_compare($tls[1], '1.0.1', '>=');
+$com = OPENSSL_VERSION_NUMBER >= 268439615;
 
 println('PHP: ' . $php, $cli);
 println('OpenSSL: ' . $tls[1], $cli);
