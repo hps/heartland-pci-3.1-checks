@@ -47,13 +47,13 @@
 Below is information you should send to our Support Team
 
     CURLOPT_VERBOSE This is a connection log
-    <textarea cols="100" rows="25"><?php echo readStream($verbose) ?></textarea>
+    <textarea cols="100" rows="25"><?php echo readStream($verbose); ?></textarea>
 
     curl_exec Is this the expected content from the server?
-    <textarea cols="100" rows="25"><?php echo $curlOut ?></textarea>
+    <textarea cols="100" rows="25"><?php echo $curlOut; ?></textarea>
 
     curl_getinfo Information about the response
-    <textarea cols="100" rows="25"><?php echo $curl_getinfo ?></textarea>
+    <textarea cols="100" rows="25"><?php echo print_r($curl_getinfo); ?></textarea>
 
     curl_errno if this is not "0" please consult: https://curl.haxx.se/docs/ssl-compared.html
-    <textarea cols="100" rows="1"><?php echo $curl_errno ?></textarea>
+    <textarea cols="100" rows="1"><?php echo $curl_errno; ?></textarea>
