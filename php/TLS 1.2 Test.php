@@ -35,14 +35,11 @@
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 
-    $curlOut = tempStream();
-    fwrite($curlOut,curl_exec($ch));
+    $curlOut = curl_exec($ch);
 
-    $curl_getinfo = tempStream();
-    fwrite($curl_getinfo,print_r(curl_getinfo($ch),true));
+    $curl_getinfo = curl_getinfo($ch);
 
-    $curl_errno = tempStream();
-    fwrite($curl_errno,curl_errno($ch));
+    $curl_errno = curl_errno($ch);
 
     curl_close($ch);
     ?>
@@ -53,10 +50,10 @@ Below is information you should send to our Support Team
     <textarea cols="100" rows="25"><?php echo readStream($verbose) ?></textarea>
 
     curl_exec Is this the expected content from the server?
-    <textarea cols="100" rows="25"><?php echo readStream($curlOut) ?></textarea>
+    <textarea cols="100" rows="25"><?php echo $curlOut ?></textarea>
 
     curl_getinfo Information about the response
-    <textarea cols="100" rows="25"><?php echo readStream($curl_getinfo) ?></textarea>
+    <textarea cols="100" rows="25"><?php echo $curl_getinfo ?></textarea>
 
     curl_errno if this is not "0" please consult: https://curl.haxx.se/docs/ssl-compared.html
-    <textarea cols="100" rows="1"><?php echo readStream($curl_errno) ?></textarea>
+    <textarea cols="100" rows="1"><?php echo $curl_errno ?></textarea>
