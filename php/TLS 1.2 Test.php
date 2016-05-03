@@ -7,15 +7,14 @@
 
     SSL Library: <?php echo curl_version()['ssl_version']; ?>
 
-    If you leave this blank a static test key is used
     <form autocomplete="off" method="post" action="#" enctype="application/x-www-form-urlencoded">Enter your private Key: <input name="api"><input type="submit"> </form>
     <?php
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['api'] ) {
-        $api = $_POST['api'];
-    }else{
-        $api = 'skapi_cert_MYl2AQAowiQAbLp5JesGKh7QFkcizOP2jcX9BrEMqQ';
-    }
-    $data = <<<EOD
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['api'] ) {
+    $api = $_POST['api'];
+}else{
+    $api = 'skapi_cert_MYl2AQAowiQAbLp5JesGKh7QFkcizOP2jcX9BrEMqQ';
+}
+$data = <<<EOD
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hps="http://Hps.Exchange.PosGateway">
 
             <soapenv:Body>
@@ -29,7 +28,7 @@
                                 <hps:Block1>
                                     <hps:CardData>
                                         <hps:ManualEntry>
-                                            <hps:CardNbr>5448144077201692</hps:CardNbr>
+                                            <hps:CardNbr>448144077201692</hps:CardNbr>
                                             <hps:ExpMonth>02</hps:ExpMonth>
                                             <hps:ExpYear>2025</hps:ExpYear>
                                         </hps:ManualEntry>
