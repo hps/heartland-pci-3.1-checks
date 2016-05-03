@@ -3,17 +3,18 @@
     TLS 1.2 Test
     PHP Version: <?php echo phpversion(); ?>
 
-    cURL Version Version: <?php echo curl_version()['version']; ?>
+    cURL Version Version: <?php echo curl_version()['version'];$_SERVER ?>
 
     SSL Library: <?php echo curl_version()['ssl_version']; ?>
 
-    <form autocomplete="off" method="post" action="#" enctype="application/x-www-form-urlencoded">Enter your private Key: <input name="api"><input type="submit"> </form>
+    <form autocomplete="off" method="post" action="#" enctype="application/x-www-form-urlencoded">Enter your private Key: <input name="api"><input type="submit" value="Test My Key"> </form>
     <?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['api'] ) {
-    $api = $_POST['api'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && trim(filter_var($_POST['api'],FILTER_SANITIZE_STRING))) {
+    $api = trim(filter_var($_POST['api'],FILTER_SANITIZE_STRING));
 }else{
-    $api = 'skapi_cert_MYl2AQAowiQAbLp5JesGKh7QFkcizOP2jcX9BrEMqQ';
+    die('Please paste in your private API key');
 }
+    $url = "https://" . ( preg_match('/cert/', $api) === 1 ? 'cert.' : ''  ) . "api2.heartlandportico.com/Hps.Exchange.PosGateway/PosGatewayService.asmx";
 $data = <<<EOD
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hps="http://Hps.Exchange.PosGateway">
 
@@ -34,7 +35,7 @@ $data = <<<EOD
                                         </hps:ManualEntry>
                                         <hps:TokenRequest>Y</hps:TokenRequest>
                                     </hps:CardData>
-                                    <hps:Amt>0.01</hps:Amt>
+                                    <hps:Amt>.01</hps:Amt>
                                     <hps:AllowDup>Y</hps:AllowDup>
                                 </hps:Block1>
                             </hps:CreditSale>
@@ -45,33 +46,26 @@ $data = <<<EOD
         </soapenv:Envelope>
 EOD;
 
-    $header = array(
-        'Content-type: text/xml;charset="utf-8"',
-        'Accept: text/xml',
-        'SOAPAction: ""',
-        'Content-length: '.strlen($data),
-    );
-
-    /**
-     * Created by PhpStorm.
-     * User: charles.simmons
-     * Date: 4/18/2016
-     * Time: 4:09 PM
-     */
-    function tempStream(){
-        static $tempCounter = 0;
-        return fopen('php://temp' . $tempCounter++, 'w+');
-    }
-    function readStream($stream){
-        rewind($stream);
-        return stream_get_contents($stream);
-    }
+$header = array(
+    'Content-type: text/xml;charset="utf-8"',
+    'Accept: text/xml',
+    'SOAPAction: ""',
+    'Content-length: '.strlen($data),
+);
+function tempStream(){
+    static $tempCounter = 0;
+    return fopen('php://temp' . $tempCounter++, 'w+');
+}
+function readStream($stream){
+    rewind($stream);
+    return stream_get_contents($stream);
+} //iptables -A INPUT -s 12.130.236.166 -j DROP
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_VERBOSE, true);
     $verbose = tempStream();
     curl_setopt($ch, CURLOPT_STDERR, $verbose);
-    curl_setopt($ch, CURLOPT_URL, "https://" . ( preg_match('/cert/', $api) === 1 ? 'cert.' : ''  ) . "api2.heartlandportico.com/Hps.Exchange.PosGateway/PosGatewayService.asmx"); //Url together with parameters
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 100);
+    curl_setopt($ch, CURLOPT_URL, $url); //Url together with parameters
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1000);
     curl_setopt($ch, CURLOPT_TIMEOUT, 100);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -90,24 +84,21 @@ EOD;
     $dom->formatOutput = TRUE;
     $data =  str_replace('544814407720', '************', $dom->saveXml()) ;
     $data =  str_replace($api, substr($api,0,15) . '.......' . substr($api,-5), $data) ;
-    //file_put_contents('req.xml',$dom->saveXml());
     $dom = new DOMDocument;
     $dom->preserveWhiteSpace = FALSE;
     $dom->loadXML($curlOut);
     $dom->formatOutput = TRUE;
-    //file_put_contents('resp.xml',$dom->saveXml());
     $curlOut =  $dom->saveXml();
-
     $curl_getinfo = curl_getinfo($ch);
-
     $curl_errno = curl_errno($ch);
-
     curl_close($ch);
     ?>
 
-    Below is information you should send to our Support Team
+    Please send this URL to our Support Team <a href="mailto:DeveloperPortal@e-hps.com">email DeveloperPortal@e-hps.com</a>
+    <?php echo 'http' . (array_key_exists('HTTPS', $_SERVER) && isset($_SERVER['HTTPS']) ? 's://' : '://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>
 
-    REQUEST DATA This is a connection log sent to: https://cert.api2.heartlandportico.com/Hps.Exchange.PosGateway/PosGatewayService.asmx
+    REQUEST DATA This is a connection log sent to: <?php echo $url; ?>
+
     <textarea cols="100" rows="25"><?php echo $data ?></textarea>
 
     CURLOPT_VERBOSE This is a connection log
