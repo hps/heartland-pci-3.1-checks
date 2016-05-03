@@ -29,7 +29,7 @@ $data = <<<EOD
                                 <hps:Block1>
                                     <hps:CardData>
                                         <hps:ManualEntry>
-                                            <hps:CardNbr>448144077201692</hps:CardNbr>
+                                            <hps:CardNbr>5448144077201692</hps:CardNbr>
                                             <hps:ExpMonth>02</hps:ExpMonth>
                                             <hps:ExpYear>2025</hps:ExpYear>
                                         </hps:ManualEntry>
